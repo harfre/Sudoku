@@ -1,5 +1,5 @@
 public class Sudoku{
-  int[][] val;
+  private int[][] val;
   
   public Sudoku(){
     val = new int[9][9];
@@ -48,68 +48,72 @@ public class Sudoku{
     System.out.println();
   }
   
-  public Sudoku solve(){
-    int[][] solvedVal = recursiveStep(val, 0, 0);
-    if(solvedVal[0][0]==0){
+  public void solve(){
+    if(recursiveStep(0)){
+      print();
+    }else{
       System.out.println("Sudoku not solvable:");
       print();
-    }else{
-      val=solvedVal;
-      print();
     }
-    return new Sudoku(solvedVal);
   }
   
-  private static int[][] recursiveStep(int[][] inputSudoku, int iPos){
+  private boolean recursiveStep(int iPos){
     int iRow = iPos/9;
     int iCol = iPos%9;
-    int[][] outputSudoku;
     
-    System.out.println("\nRow: " + iRow + "\nCol: " + iCol + "\nCurrent Value:" + inputSudoku[iRow][iCol]);  
-    if(isWrong(inputSudoku, iRow, iCol)){
-      System.out.println("Not accepted");
-      if(inputSudoku[iRow][iCol]==9){
-        return new int[9][9];
-      }else{
-        inputSudoku[iRow][iCol]++;
+    if(iPos == 81)
+      return true;
+    if(val[iRow][iCol]!=0){
+      if(recursiveStep(iPos+1)){
+        return true;
       }
     }else{
-      System.out.println("Accepted");
-      iPos++;
-      if(iPos==81){
-        return inputSudoku;
-      }
-    }
-    outputSudoku = recursiveStep(inputSudoku, iPos);
-    outputSudoku
-  }
-  private static boolean isWrong(int[][] s, int iRow, int iCol){
-    int testVal = s[iRow][iCol];
-    for (int j=0;j<9;j++){
-      if ((testVal == s[j][iCol])&&j!=iRow){
-        System.out.println("Column error");
-        return true;
-      }
-    }
-    for (int j=0;j<9;j++){
-      if ((testVal == s[iRow][j])&&j!=iCol){
-        System.out.println("Row error");
-        return true;
-      }
-    }
-    for (int j=0;j<9;j++){
-      int relRow =iRow%3;
-      int relCol = iCol%3;
-      int boxRow = iRow/3;
-      int boxCol = iCol/3;
-      int jRow = j/3;
-      int jCol = j%3;
-      if ((testVal == s[boxRow*3+jRow][boxCol*3+jCol]) && (jRow!=relRow || jCol != relCol)){
-        System.out.println("Box error, j = " + j);
-        return true;
+      for (int j=1;j<=9;j++){
+        val[iRow][iCol] = j;
+        if(isOK(iRow, iCol)){
+          if(recursiveStep(iPos+1)){
+            return true;
+          }else{
+            val[iRow][iCol] = 0;
+          }
+        }else{
+          val[iRow][iCol] = 0;
+        }
       }
     }
     return false;
   }
   
+  private boolean isOK(int iRow, int iCol){
+    int testVal = val[iRow][iCol];
+    for (int j=0;j<9;j++){
+      if ((testVal == val[j][iCol])&&j!=iRow){
+        return false;
+      }
+    }
+    for (int j=0;j<9;j++){
+      if ((testVal == val[iRow][j])&&j!=iCol){
+        return false;
+      }
+    }
+    for (int j=0;j<9;j++){
+      int relRow = iRow%3;
+      int relCol = iCol%3;
+      int boxRow = iRow/3;
+      int boxCol = iCol/3;
+      int jRow = j/3;
+      int jCol = j%3;
+      if ((testVal == val[boxRow*3+jRow][boxCol*3+jCol]) && (jRow!=relRow || jCol != relCol)){
+        return false;
+      }
+    }
+    return true;
+  }
+  public void reset(){
+    for(int i=0;i<9;i++){
+      for(int j=0;j<9;j++){
+        val[i][j]=0;
+      }
+    }
+  }
 }
