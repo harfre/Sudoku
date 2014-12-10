@@ -8,7 +8,7 @@ public class SudokuMain{
     boolean boolContinue = true;
     
     while(boolContinue){
-      System.out.println("What do you whant to do?\n1: Input complete sudoku.\n2: Add an entry to existing sudoku.\n3: Solve existing sudoku. \n4: Show existing sudoku. \n5: Exit");
+      System.out.println("What do you whant to do?\n1: Input complete sudoku.\n2: Add an entry to existing sudoku.\n3: Solve existing sudoku. \n4: Show existing sudoku. \n5: Reset. \n6: Exit");
       choice = user_input.nextInt();
       switch (choice){
         case 1: //Input complete sudoku
@@ -17,7 +17,8 @@ public class SudokuMain{
           //loop over sudoku, change values
           break;
         case 2: //Input single value
-          //Add protection for bad values!
+          //Add protection for bad values
+          //Add protection for incorrect values?
           System.out.print("\nRow (1-9): ");           
           iRow =  user_input.nextInt() - 1;
           System.out.print("\nColumn (1-9): ");
@@ -31,6 +32,9 @@ public class SudokuMain{
           break;
         case 4: //Show
           s.print();
+          break;
+        case 5: //Reset
+          s.reset();
           break;
         default: //Exit
           boolContinue = false;
